@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>관리자 공지사항 페이지</title>
+	<!--로그인 폼 출처 : https://rpbloggers.com/free-download-html-css-login-form/#google_vignette -->
+	<link rel="stylesheet" type="text/css" href="/css/adminNotice.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+	<div class="form sign-in-container" >
+		<form action="#">
+			<h1>공지사항 작성</h1>
+			<input type="text" placeholder="제목" name="title" id="title" class="title">
+            
+			<textarea name="content" id="content" class="title" cols="47" rows="10"></textarea>
+            
+			<br /> <br/>
+			<button type="button" class="btn" onclick="uploadNotice();">작성</button>
+		</form>
+	</div>
+	
+</div>
+</body>
+
+<script>
+    
+
+    function uploadNotice(){
+        let title = $('#title').val();
+        let content = $('#content').val();
+
+        $.ajax({
+            url: "/adminNotice",
+            type: "POST",
+            data: {
+                title: title,
+                content: content
+            },
+            success: function(data) {
+                if (data === "already has") {
+                    alert("이미 존재하는 공지사항입니다.");
+                }else if(data === "upload success") {
+                    alert("공지사항이 업로드되었습니다.");
+                    window.location="/notice";
+                }
+            }
+        })
+    }
+
+ 
+</script>
+</html>
+
+
