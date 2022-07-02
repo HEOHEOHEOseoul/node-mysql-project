@@ -2,75 +2,42 @@
 <html>
 <head>
 	<title>회원가입</title>
-	<!--로그인 폼 출처 : https://rpbloggers.com/free-download-html-css-login-form/#google_vignette -->
 	<link rel="stylesheet" type="text/css" href="/css/loginStyle.css">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
-<body>
-<div class="container">
-	<div class="form sign-in-container">
-		<form action="#">
-			<h1>회원가입</h1>
-			<input type="email" placeholder="이메일" id="id" name="id" class="id" >
-			<input type="password" placeholder="Password" id="password" name="password" class="pw" >
-            <input type="password" placeholder="Password" id="password_a" name="cpassword" class="pw" >
-            <input type="text" placeholder="이름" id="name" name="name" class="name" >
-            <input type="date" placeholder="생일" id="birth" name="birth" class="birth" >
-            <input type="text" placeholder="연락처( - 없이 입력 )" id="phoneNum" name="phoneNum" class="phoneNum" >
-			<button type="button" class="btn" onclick="checkPW();">회원가입</button>
-		</form>
-	</div>
-	<div class="overlay-container">
-		<div class="overlay">
-			<div class="overlay-panel overlay-right">
-				<h1>로그인</h1>
-				<p>이미 계정을 갖고 계신가요?</p>
-				<button class="signup_btn" onclick="window.location='/login'">로그인</button>
-                <br />
-                <button class="signup_btn" onclick="window.location='/'">홈</button>
-			</div>
-		</div>
-	</div>
-</div>
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
+    <div class="container">
+        <div class="form sign-in-container">
+            <form action="#">
+                <h1>회원가입</h1>
+                <input type="email" placeholder="이메일" id="id" name="id" />
+                <input type="password" placeholder="Password" id="password" name="password" />
+                <input type="password" placeholder="Password" id="password_a" name="cpassword" />
+                <input type="text" placeholder="이름" id="name" name="name" />
+                <input type="date" placeholder="생일" id="birth" name="birth" />
+                <input type="text" placeholder="연락처( - 없이 입력 )" id="phoneNum" name="phoneNum" />
+                <button type="button" class="btn" onclick="checkPW();">회원가입</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-right">
+                    <h1>로그인</h1>
+                    <p>이미 계정을 갖고 계신가요?</p>
+                    <button class="signup_btn" onclick="window.location='/login'">로그인</button>
+                    <br />
+                    <button class="signup_btn" onclick="window.location='/'">홈</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
-
-<script>
-    function checkPW(){
-        var id = $('#id').val();
-        var pw = $('#password').val();
-        var cpw = $('#password_a').val();
-        var name = $('#name').val();
-        var birth = $('#birth').val();
-        var phoneNum = $('#phoneNum').val();
-
-        if(id.length<4 || id.length >=20) alret("ID의 길이는 4~20자 입니다.");
-        else if(pw.length<4 || cpw.length<4) alert("4자리 이상의 암호를 사용해 주세요.");
-        else if(pw!==cpw) alert("비밀번호가 일치하지 않습니다.");
-        else {
-            $.ajax({
-                url: "/signUp",
-                type: "POST",
-                data: {
-                    id: id,
-                    pw: pw,
-                    name: name,
-                    birth: birth,
-                    phoneNum: phoneNum
-                },
-                success: function(data) {
-                    if (data === "중복 ID") {
-                        alert("이미 존재하는 ID 입니다.");
-                    }else if(data === "성공") {
-                        alert("정상적으로 회원가입이 되었습니다.");
-                        window.location="/login";
-                    }
-                }
-            })
-        }
-    }
-</script>
+    <script src="/js/signUp.js"></script>
 
 </body>
 </html>
 
+
+<!--로그인 폼 출처 : https://rpbloggers.com/free-download-html-css-login-form/#google_vignette -->

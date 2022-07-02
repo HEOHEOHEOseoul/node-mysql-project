@@ -5,33 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/noticeStyle.css">
-    <!--참고 출처 : https://morioh.com/p/c29a0add48ca -->
     <title> 공지사항 </title>
 </head>
-<body>
-    <div class="accordion-body">
-        <div class="accordion">
-            <h1>🔔 공지사항 </h1>
-            <hr>
-            <% for(let title of data) { %>
-            <div class="container">
-                <div class="label"><%=title.title%></div>
-                <div class="content"><%=title.content%></div>
+    <body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
+        <div class="accordion-body">
+            <div class="accordion">
+                <h1>🔔 공지사항 🔔</h1>
+                <hr>
+                <% for(let notice of noticeData) { %>
+                <div class="container">
+                    <div class="label"><%=notice.title%></div>
+                    <div class="content"><%=notice.content%></div>
+                </div>
+                <hr>
+                <% } %>
             </div>
-            <hr>
-            <% } %>
         </div>
-    </div>
-    
-    <script>
-        const accordion = document.getElementsByClassName('container');
-
-        for (i=0; i<accordion.length; i++) {
-            accordion[i].addEventListener('click', function () {
-            this.classList.toggle('active')
-            })
-        }
-    </script>
-
-</body>
+        
+        <script src="/js/notice.js"></script>
+    </body>
 </html>
+
+<!--참고 출처 : https://morioh.com/p/c29a0add48ca -->
