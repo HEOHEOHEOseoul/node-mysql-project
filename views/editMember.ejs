@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>회원 정보 수정</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <h1>회원 정보 수정</h1>
+        <p>
+            
+                <li>변경할 비밀번호 : <input type="password" id="password" /></li>
+                <li>변경할 비밀번호 확인 : <input type="password" id="passwordc" /></li>
+                <li>텔레그램 아이디 : <input type="text" id="telId" /></li>
+                <li>휴대폰 번호 : <input type="text" id="phoneNum"></li>
+                <li><button onclick="editMember()">저장</button></li>
+
+                <br /><br />
+                <h3>※ 변경할 정보만 입력하세요.</h3>
+            
+        </p>
+        
+    </body>
+    <script>
+        function editMember() {
+            let password = $('#password').val();
+            let cpw = $('#passwordc').val();
+            let telId = $('#telId').val();
+            let phoneNum = $('#phoneNum').val();
+            
+            let editDataKey = ['password', 'telId', 'phoneNum'];
+            let editData = [password, telId, phoneNum];
+            let editObj = {};
+            for(let i =0; i<editData.length; i++) {
+                if(editData[i] !== "") editObj[editDataKey[i]] = editData[i];
+            }
+            console.log(editObj)
+
+            // if(1 <= password.length < 4 || 1 <= cpw.length < 4) alert("4자리 이상의 암호를 사용해 주세요.");
+            if(password!==cpw) alert("비밀번호가 일치하지 않습니다.");
+            else {
+                $.ajax({
+                    url: "/editMember",
+                    type: "POST",
+                    data: editObj,
+                    success: function(data) {
+                        if (data === "success") {
+                            alert("변경 완료. 다시 로그인해 주세요.");
+                            window.location='/logout';
+                        }
+                    }
+                })
+            }
+        }
+        
+    </script>
+</html>

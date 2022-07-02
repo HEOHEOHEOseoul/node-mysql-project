@@ -36,6 +36,7 @@ const stringSession = new StringSession("");
 
 
 const { start } = require('repl');
+const session = require('express-session');
 const app = express();
 const router = express.Router();
 const PORT = process.env.PORT;
@@ -93,7 +94,7 @@ console.log(`[${dateTimeNow.toLocaleString()}] --- MySql 연결 완료`);
         
         console.log(req.body.telId);
         let teleId=req.body.telId;
-        console.log(1)
+
         async function run(_telId) {
             await client.connect(); // This assumes you have already authenticated with .start()
             console.log(2)
@@ -178,6 +179,7 @@ app.post('/login', (req, res) => {
     const userId = req.body.id;
     const userPw = req.body.pw;
     const SQL_LOGIN_CHECK = process.env.SQL_LOGIN_CHECK + userId + '";';
+    const dbPw = process.env.DB_USER_PASSWORD;
     
     connection.query(SQL_LOGIN_CHECK, (err, rows) => {
         if(err) throw err;
@@ -187,11 +189,10 @@ app.post('/login', (req, res) => {
                 res.redirect('/login');
             }
             else {
-                if(bcrypt.compareSync(userPw, rows[0].pw)) {
+                if(bcrypt.compareSync(userPw, rows[0][dbPw])) {
                     console.log(`${userId} 계정으로 로그인 성공`);
                     req.session.user = {
                         id: userId,
-                        pw: userPw,
                     }
                     res.redirect('/');
                 }else {
@@ -224,56 +225,50 @@ app.get('/adminNotice', (req, res) => {
             if(err) console.log(err);
             else{
                 if(rows.length === 0) {
-                    res.redirect('/');
+                    res.status(404).render('error404.ejs');
                 }else {
                     res.render('adminNotice.ejs');
                 }
             }
         });
-    } else res.redirect('/');
+    } else res.status(404).render('error404.ejs');
 });
 
 
 app.post('/adminNotice', (req, res) => {
-    const title = req.body.title;
-    const content = req.body.content;
-
-    const query = `select content from noticeTest where title="${title}";`;
-    connection.query(query, (err, rows) => {
-        if(rows.length == 0) {
-            let sql = {
-                title: title,
-                content: content
-            };
-
-            //create query
-            let query = connection.query('insert into noticeTest set ?', sql, (err, rows) => {
+    const noticeNo = process.env.DB_NOTICE_NO;
+    const NOTICE = {};
+    NOTICE[process.env.DB_NOTICE_TITLE] = req.body.title;
+    NOTICE[process.env.DB_NOTICE_CONTENT] = req.body.content;
+    connection.query(process.env.SQL_NOTICE_MAXNO, (err, maxNo) => {
+        if(err) console.log(err);
+        else {
+            NOTICE[noticeNo] = (maxNo[0]['max(' + noticeNo +')']) + 1;
+            connection.query(process.env.SQL_NOTICE_UP, NOTICE, (err, rows) => {
                 if( err ) throw err;
-                else  res.send("upload success");
-                
+                else res.send("upload success");
             });
         }
-        else res.send('already has'); //res.send("중복 공지");
     });
-
 });
 
 
 app.get('/adminMember', (req, res) => {
     if(req.session.user !== undefined) {
-        let queryString = 'select permission from members where id="'+req.session.user.id+'" and permission="A"';
-        connection.query(queryString, (err, rows)=>{
-            if(err) throw err;
+        const permissionCheck = process.env.SQL_USER_PERMISSION_1 + req.session.user.id + 
+                            process.env.SQL_USER_PERMISSION_2;
+        connection.query(permissionCheck, (err, rows)=>{
+            if(err) console.log(err);
             else{
                 if(rows.length === 0) {
-                    res.redirect('/');
+                    res.status(404).render('error404.ejs');
                 }else {
-                    let queryString = 'select * from members';
-                    connection.query(queryString, (err, result) => {
+                    const queryString = process.env.SQL_USER_INFO + ';';
+                    connection.query(queryString, (err, members) => {
                         if(err) throw err;
                         else {
                             res.render(('adminMember.ejs'), {
-                                data: result
+                                data: members,
                             });
                         }
                     });
@@ -281,22 +276,22 @@ app.get('/adminMember', (req, res) => {
             }
         });
     }else {
-        res.redirect('/');
+        res.status(404).render('error404.ejs');
     }
 });
 
 
 app.get('/admin', (req, res) => {
     if(req.session.user !== undefined) {
-        let queryString = 'select permission from members where id="'+req.cookies.user+'" and permission="A"';
+        const queryString = process.env.SQL_USER_PERMISSION_1 + req.session.user.id + process.env.SQL_USER_PERMISSION_2;
         connection.query(queryString, (err, rows)=>{
             if(err) console.log(err);
             else{
-                if(rows.length === 0) res.redirect('/');
+                if(rows.length === 0) res.status(404).render('error404.ejs');
                 else res.render('admin.ejs');
             }
         });
-    }else res.redirect('/');
+    }else res.status(404).render('error404.ejs');
 });
 
 
@@ -324,8 +319,39 @@ app.get('/service', (req, res) => {
     }
 });
 
+app.get('/editMember', (req, res) => {
+    if(req.session.user !== undefined) {
+        const memberEdit = process.env.SQL_USER_INFO + ' where ' + process.env.DB_USER_ID + '= "' + req.session.user.id + '";';
+        
+        connection.query(memberEdit, (err, members) => {
+            if (err) console.log(err);
+            else {
+                res.render('editMember.ejs', {
+                    user: members,
+                });
+            }
+        });
+    }
+});
 
 
+app.post('/editMember', (req, res) => {
+    const randomSalt = Math.floor((Math.random()*12)+3);
+
+    let editMembeKey = [process.env.DB_USER_PASSWORD, process.env.DB_USER_SNS_ID, process.env.DB_USER_PHONE];
+    let editMemberValue = [bcrypt.hashSync(req.body.password, randomSalt), req.body.telId, req.body.phoneNum];
+    let editMemberObj = {};
+    for ( let i = 0; i < editMembeKey.length; i++) 
+        if(editMemberValue[i] !== undefined) 
+            editMemberObj[editMembeKey[i]] = editMemberValue[i];
+    
+    connection.query('update db_bisangoo_members set ?', editMemberObj, (err, result) => {
+        if(err) console.log(err);
+        else {
+            res.send('success');
+        }
+    });
+});
 
 
 
