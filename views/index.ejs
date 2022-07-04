@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>하이하이</title>
+    <title>biBOT</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
     <header>
         <!-- <a href="#" class="logo">TJEBOT</a> -->
-        
+        <img src="/imgs/testLogo.png" height="70" width="150" />
         <ul>
             <li><a href="#" class="active">HOME</a></li>
             <li><a href="/service">SERVICE</a></li>
             <li><a href="/notice">NOTICE</a></li>
             <% if ( isLogin == true ) { %>
+                <li><a href="/editMember">MY PAGE</a></li>
                 <li><a href="/logout">LOGOUT</a></li>
             <% } else { %>
                 <li><a href="/login" id="login">LOGIN</a></li>
@@ -27,14 +28,14 @@
     </header>
     <section>
         <img src="/imgs/stars.png" id="stars">
-        <img src="/imgs/bitcoin.png" id="moon">
+        <img src="/imgs/hi.png" id="moon">
         <img src="/imgs/mountains_behind.png" id="mountains_behind">
-        <h2 id="text">가장 빠르게 정보를 받아보세요!⚡️</h2>
+        <!-- <h2 id="text">biBot을 이용해 보세요.⚡️</h2> -->
         <a href="#sec" id="btn">더 보기</a>
         <img src="/imgs/mountains_front.png" id="mountains_front">
     </section>
     <div class="sec" id="sec">
-        <h2>더조은 봇은</h2>
+        <h2>biBOT은</h2>
         <p>
             
             Web 3.0 팀들과 암호화폐 인플루언서들의 트위터 게시글을 업로드하면 실시간으로 번역하여 메신저로 전송합니다.
