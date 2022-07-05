@@ -4,13 +4,13 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>회원 정보 수정</title>
+        <title>회원 정보 수정 - biBOT</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
         <h1>회원 정보 수정</h1>
         <p>
-            
+                
                 <li>변경할 비밀번호 : <input type="password" id="password" /></li>
                 <li>변경할 비밀번호 확인 : <input type="password" id="passwordc" /></li>
                 <li>텔레그램 아이디 : <input type="text" id="telId" /></li>
@@ -29,6 +29,7 @@
             let cpw = $('#passwordc').val();
             let telId = $('#telId').val();
             let phoneNum = $('#phoneNum').val();
+            let id = $('#id').val();
             
             let editDataKey = ['password', 'telId', 'phoneNum'];
             let editData = [password, telId, phoneNum];

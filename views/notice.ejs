@@ -5,24 +5,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/noticeStyle.css">
-    <title> 공지사항 </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>공지사항 - biBOT </title>
 </head>
     <body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
         <div class="accordion-body">
             <div class="accordion">
-                <h1>🔔 공지사항 🔔</h1>
+                <h1>공지사항</h1>
                 <hr>
                 <% for(let notice of noticeData) { %>
-                <div class="container">
-                    <div class="label"><%=notice.title%></div>
-                    <div class="content"><%=notice.content%></div>
-                    <% if(isAdmin) { %>
-                    <button onclick="window.location='/editNotice'">수정</button>
-                    <button onclick="window.location='/deleteNotice'">삭제</button>
-                    <% } %>
-                </div>
-                <hr>
+                    <form action="/deleteNotice" method="post">
+                        <div class="container">
+                            <div class="label"><%=notice.title%></div>
+                            <div class="content"><%=notice.content%></div>
+                            <% if(isAdmin) { %>
+                            <input type="hidden" name="noticeNo" id="noticeNo" value="<%=notice.ano%>">
+                            <!-- <button onclick="editNotice()">수정</button> -->
+                            <button type="submit">삭제</button>
+                            <% } %>
+                        </div>
+                        <hr>
+                    </form>
                 <% } %>
+                        
             </div>
         </div>
         

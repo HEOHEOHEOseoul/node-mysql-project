@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/noticeStyle.css">
     
-    <title> 회원관리 </title>
+    <title>회원 관리 - biBOT</title>
 </head>
 <body>
     <div class="accordion-body">
@@ -14,13 +14,16 @@
             <h1> 회원관리 </h1>
             <hr>
             <% for(let datas of data) { %>
-            <div class="container">
-                <div class="label"><%=datas.user_id%></div>
-                <div class="content">이름 : <%=datas.user_name%> | 휴대폰 번호 : <%=datas.user_phone%> <br> 결제 상태 : <%=datas.user_pay_status%> | 텔레그램 아이디 : <%=datas.user_tel_id%> <br> 
-                권한 : <%if(datas.user_admin == 1){ %> 관리자 <% }else {%> 회원 <%}%> <br> 가입일 : <%=datas.user_regist_date%> | 
-                수신동의 : <%=datas.user_send_agree%> <br> 생일 : <%=datas.user_birth%> | <button onclick="window.location='/adminMemberEdit'">정보 수정</button>
+            <form action="/adminMemberEditPage" method="post">
+                <div class="container">
+                    <input type="hidden" name="id" value="<%=datas.user_id%>">
+                    <div class="label"><%=datas.user_id%></div>
+                    <div class="content">이름 : <%=datas.user_name%> | 휴대폰 번호 : <%=datas.user_phone%> <br> 결제 상태 : <%=datas.user_pay_status%> | 텔레그램 아이디 : <%=datas.user_tel_id%> <br> 
+                    권한 : <%if(datas.user_admin == 1){ %> 관리자 <% }else {%> 회원 <%}%> <br> 가입일 : <%=datas.user_regist_date%> | 
+                    수신동의 : <%=datas.user_send_agree%> <br> 생일 : <%=datas.user_birth%> | <button type="submit">정보 수정</button>
+                    </div>
                 </div>
-            </div>
+            </form>
             <hr>
             <% } %>
         </div>

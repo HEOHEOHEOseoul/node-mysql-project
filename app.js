@@ -62,7 +62,6 @@ app.use(expressSession(sessionUser));
 app.use(express.urlencoded('views', { extended: true })); //써야하나?
 
 
-
 let dateTimeNow = new Date();
 
 
@@ -113,7 +112,6 @@ console.log(`[${dateTimeNow.toLocaleString()}] --- MySql 연결 완료`);
 })();
 
 
-
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
@@ -152,7 +150,7 @@ app.post('/signUp', (req, res) => {
                     if( err ) console.log(err);
                     else  res.send("registDone");
                 });
-            }else res.send("alreadyHasId");
+            } else res.send("alreadyHasId");
         }
     });
 });
@@ -171,7 +169,7 @@ app.post('/login', (req, res) => {
     const dbPw = process.env.DB_USER_PASSWORD;
     
     connection.query(SQL_LOGIN_CHECK, (err, rows) => {
-        if(err) throw err;
+        if(err) console.log(err);
         else {
             if(rows.length == 0) {
                 console.log('해당 유저 ID 없음');
@@ -211,7 +209,7 @@ app.get("/notice", (req, res) => {
 
 
 app.get('/adminNotice', (req, res) => {
-    if(req.session.user.isAdmin) res.render('adminNotice.ejs');
+    if(req.session.user) { if(req.session.user.isAdmin) res.render('adminNotice.ejs'); }
     else res.status(404).render('error404.ejs');
 });
 
@@ -235,59 +233,34 @@ app.post('/adminNotice', (req, res) => {
 
 
 app.get('/adminMember', (req, res) => {
-    if(req.session.user !== undefined) {
-        const permissionCheck = process.env.SQL_USER_PERMISSION_1 + req.session.user.id + 
-                            process.env.SQL_USER_PERMISSION_2;
-        connection.query(permissionCheck, (err, rows)=>{
-            if(err) console.log(err);
-            else{
-                if(rows.length === 0) {
-                    res.status(404).render('error404.ejs');
-                }else {
-                    const queryString = process.env.SQL_USER_INFO + ';';
-                    connection.query(queryString, (err, members) => {
-                        if(err) throw err;
-                        else {
-                            res.render(('adminMember.ejs'), {
-                                data: members,
-                            });
-                        }
-                    });
-                }
-            }
-        });
-    }else {
+    if(req.session.user) {
+        if(req.session.user.isAdmin) {
+            const queryString = process.env.SQL_USER_INFO + ';';
+            connection.query(queryString, (err, members) => {
+                if(err) console.log(err);
+                else res.render('adminMember.ejs', { data: members, });
+            });
+        }
+    } else {
         res.status(404).render('error404.ejs');
     }
 });
 
 
 app.get('/admin', (req, res) => {
-    if(req.session.user !== undefined) {
-        const queryString = process.env.SQL_USER_PERMISSION_1 + req.session.user.id + process.env.SQL_USER_PERMISSION_2;
-        connection.query(queryString, (err, rows)=>{
-            if(err) console.log(err);
-            else{
-                if(rows.length === 0) res.status(404).render('error404.ejs');
-                else res.render('admin.ejs');
-            }
-        });
-    }else res.status(404).render('error404.ejs');
+    if(req.session.user) { if(req.session.user.isAdmin) res.render('admin.ejs'); }
+    else res.status(404).render('error404.ejs');
 });
 
 
-
 app.get('/service', (req, res) => {
-    if(req.session.user !== undefined) {
+    if(req.session.user) {
         const queryString = process.env.SQL_USER_TELID_1 + req.session.user.id + '";';
         connection.query(queryString, (err, rows)=>{
             if(err) console.log(err);
             else{
-                if(rows.length === 0) {
-                    res.render(('service.ejs'),{
-                        data: 'no telId'
-                    });
-                }else {
+                if(rows.length === 0)  res.render(('service.ejs'), { data: 'no telId' });
+                else {
                     res.render(('service.ejs'), {
                         data: 'has telId',
                         telId: rows[0].telId
@@ -295,24 +268,14 @@ app.get('/service', (req, res) => {
                 }
             }
         });
-    }else {
-        res.render(('service.ejs'), { data: 'no login' });
-    }
+    } else res.render(('service.ejs'), { data: 'no login' });
 });
 
+
 app.get('/editMember', (req, res) => {
-    if(req.session.user !== undefined) {
-        const memberEdit = process.env.SQL_USER_INFO + ' where ' + process.env.DB_USER_ID + '= "' + req.session.user.id + '";';
-        
-        connection.query(memberEdit, (err, members) => {
-            if (err) console.log(err);
-            else {
-                res.render('editMember.ejs', {
-                    user: members,
-                });
-            }
-        });
-    }
+    if(req.session.user) {
+        res.render('editMember.ejs');
+    } else res.redirect('/login');
 });
 
 
@@ -329,7 +292,7 @@ app.post('/editMember', (req, res) => {
         if(editMemberValue[i] !== undefined)
             editMemberObj[editMembeKey[i]] = editMemberValue[i];
     
-    let queryString = process.env.SQL_USER_UPDATE +req.session.user.id + '";'
+    let queryString = process.env.SQL_USER_UPDATE + req.session.user.id + '";'
     connection.query(queryString, editMemberObj, (err, result) => {
         if(err) console.log(err);
         else {
@@ -338,8 +301,46 @@ app.post('/editMember', (req, res) => {
     });
 });
 
+app.post('/deleteNotice', (req, res) => {
+    console.log(req.body.noticeNo)
+    const queryString = process.env.SQL_DELETE_NOTICE + req.body.noticeNo +';';
+    connection.query(queryString, (err, result) => {
+        if(err) console.log(err);
+        else res.send('deleteSuccess');
+    });
+});
 
+app.post('/adminMemberEditPage', (req, res) => {
+    if(req.session.user) {
+        if(req.session.user.isAdmin) {
+            res.render('adminMemberEdit.ejs', { id: req.body.id });
+        }
+    }else { res.status(404).render('error404.ejs'); }
+});
 
+app.post('/adminMemberEdit', (req, res) => {
+    let hashPw;
+    if(req.body.password !== undefined) hashPw = bcrypt.hashSync(req.body.password, Math.floor((Math.random()*12)+3));
+    else hashPw = req.body.password;
+
+    let editMembeKey = [process.env.DB_USER_PASSWORD, process.env.DB_USER_SNS_ID, process.env.DB_USER_PHONE, 
+                        process.env.DB_USER_NAME, process.env.DB_USER_PERMISSION];
+    let editMemberValue = [hashPw, req.body.telId, req.body.phoneNum, req.body.name, req.body.permission];
+    let editMemberObj = {};
+    for ( let i = 0; i < editMembeKey.length; i++) 
+        if(editMemberValue[i] !== undefined)
+            editMemberObj[editMembeKey[i]] = editMemberValue[i];
+    
+    let queryString = process.env.SQL_USER_UPDATE + req.body.id + '";'
+    console.log(queryString)
+    connection.query(queryString, editMemberObj, (err, result) => {
+        if(err) console.log(err);
+        else {
+            res.send('success');
+        }
+    });
+
+});
 
 
 app.get("/logout", (req, res)=> {

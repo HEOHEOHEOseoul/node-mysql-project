@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>서비스</title>
+        <title>서비스 - biBOT</title>
         <!-- Favicon-->
         <!-- <link rel="icon" type="image/x-icon" href="assets/favicon.ico" /> -->
         <!-- Bootstrap icons-->
@@ -18,15 +18,30 @@
     <body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
         
         <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
+        <header class="bg-dark py-1">
+            <img src="/imgs/testLogo.png" height="70" width="150" />
+            <ul>
+                <li><a href="/">HOME</a></li>
+                <li><a href="/service" class="active">SERVICE</a></li>
+                <li><a href="/notice">NOTICE</a></li>
+                <% if ( data == 'no login' ) { %>
+                    <li><a href="/login" id="login">LOGIN</a></li>
+                <% } else { %>
+                    <li><a href="/editMember">MY PAGE</a></li>
+                    <li><a href="/logout">LOGOUT</a></li>
+                <% } %>
+                
+            </ul>
+
+            <!-- <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">제발 써주세요</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">제발요제ㅏㅂㄹ</p>
+                    <h1 class="display-4 fw-bolder">Lorem</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa ex sunt, veritatis blanditiis suscipit non reiciendis ipsum. Molestiae delectus vitae aliquam labore doloremque? Accusantium dignissimos voluptate aspernatur tempore nulla est!</p>
                 </div>
-            </div>
+            </div> -->
         </header>
         <!-- Section-->
+        <br><br><br>
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
@@ -139,12 +154,14 @@
                     
                 </div>
             </div>
+            <br><br><br><br><br><br>
             <br><br><br><hr>
-            <h6 class="container"> 이 웹사이트의 정보는 어떤 형태의 제공을 의미하지 않으며 판매를 위한 제공 또는 구매를 위한 제공의 권유, 보증, 상품 또는 기타 금융 제품으로 해석되지 않습니다. 또한 이 웹사이트의 정보는 투자 조건의 제공을 의미하지 않습니다. 이 웹사이트에 표현 또는 암시된 모든 목적, 가정, 기대, 전략 및/또는 목표가 실현되었거나 될 것 또는 묘사한 활동 또는 성과가 이 웹사이트의 설명처럼 지속되었거나 지속될 것이라는 보증은 없습니다. </h6>
+            <h6 class="container"> 이 웹사이트의 정보는 어떤 형태의 제공을 의미하지 않으며
+                 판매를 위한 제공 또는 구매를 위한 제공의 권유, 보증, 상품 또는 기타 금융 제품으로 해석되지 않습니다. 또한 이 웹사이트의 정보는 투자 조건의 제공을 의미하지 않습니다. 이 웹사이트에 표현 또는 암시된 모든 목적, 가정, 기대, 전략 및/또는 목표가 실현되었거나 될 것 또는 묘사한 활동 또는 성과가 이 웹사이트의 설명처럼 지속되었거나 지속될 것이라는 보증은 없습니다. </h6>
         </section>
         <!-- Footer-->
         <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; TJEBot 2022</p> <br>
+            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; biBot 2022</p> <br>
                 <!-- <h6 class = "text-white"> 이 웹사이트의 정보는 어떤 형태의 제공을 의미하지 않으며 판매를 위한 제공 또는 구매를 위한 제공의 권유, 보증, 상품 또는 기타 금융 제품으로 해석되지 않습니다.또한 이 웹사이트의 정보는 투자 조건의 제공을 의미하지 않습니다.여기에 표현 또는 암시된 모든 목적, 가정, 기대, 전략 및/또는 목표가 실현되었거나 될 것 또는 묘사한 활동 또는 성과가 이 웹사이트의 설명처럼 지속되었거나 지속될 것이라는 보증은 없습니다. </h6> -->
                 
             </div>
